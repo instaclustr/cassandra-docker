@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -xue
+
+CASSANDRA_VERSION=$1
+STANDARD_CASSANDRA=true
+
+STANDARD_URL=http://dl.bintray.com/apache/cassandra/pool/main/c/cassandra
+
+CASSANDRA_DEB=$(mktemp apache-cassandra.deb.XXXXXX)
+CASSANDRA_TOOLS_DEB=$(mktemp cassandra-tools.deb.XXXXXX)
+
+if [[ $# -eq 2 && $2 == 'y' ]] ; then
+    STANDARD_CASSANDRA=false
+    CASSANDRA_DEB="/tmp/cassandra.deb"
+    CASSANDRA_TOOLS_DEB="/tmp/cassandra-tools.deb"
+    dpkg --force-depends -i ${CASSANDRA_DEB}
+    dpkg --force-depends -i ${CASSANDRA_TOOLS_DEB}
+    APT_GET_OPTS=-f dagi
+    rm ${CASSANDRA_DEB}
+else
+    dagi cassandra=${CASSANDRA_VERSION} cassandra-tools=${CASSANDRA_VERSION}
+fi
+
+#Install sstablerepairedset tool manually
+FILE=/usr/bin/sstablerepairedset
+
+sed -e 's%"x$CLASSPATH" = "x"%true%' -e 's%/../../lib/%/../share/cassandra/lib/%' -e '35 i for jar in `dirname $0`/../share/cassandra/*.jar; do CLASSPATH=$CLASSPATH:$jar; done' ${FILE} > ${FILE}.tmp
+
+mv ${FILE}.tmp ${FILE}; chmod 0555 ${FILE}

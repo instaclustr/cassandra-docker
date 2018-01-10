@@ -18,9 +18,9 @@ Current status: __Beta__
 
 Starting a Cassandra instance is simple:
 
-	```console
-    $ docker run --name some-cassandra -d cassandra:tag
-    ```
+```console
+$ docker run --name some-cassandra -d cassandra:tag
+```
 
 ... where `some-cassandra` is the name you want to assign to your container and `tag` is the tag specifying the Cassandra version you want. See the list above for relevant tags.
 
@@ -44,9 +44,9 @@ The `-v /my/own/datadir:/var/lib/cassandra` part of the command mounts the `/my/
 
 Note that users on host systems with SELinux enabled may see issues with this. The current workaround is to assign the relevant SELinux policy type to the new data directory so that the container will be allowed to access it:
 
-    ```console
-    $ chcon -Rt svirt_sandbox_file_t /my/own/datadir
-    ```
+```console
+$ chcon -Rt svirt_sandbox_file_t /my/own/datadir
+```
 
 The Cassandra configuration directory (/etc/cassandra) can be managed by docker as a docker volume as appropriate for you environment if you are not using environment variable based configuration. 
 The Cassandra data directory however should generally be a bind mount to a directory on the host with an appropriately configured file system 
@@ -57,9 +57,9 @@ This docker file does not yet support block device passthrough via the device fl
 ## Configuring the kernel
 To optimally run Cassandra, the kernal and a few other parameters for the process need to be tuned. Most of these can be done via the docker command being run:
 
-    ```console
-    --cap-add=IPC_LOCK --ulimit memlock=-1 --ulimit nofile=100000 --ulimit nproc=32768
-    ```
+```console
+--cap-add=IPC_LOCK --ulimit memlock=-1 --ulimit nofile=100000 --ulimit nproc=32768
+```
 
 Some sysctl suggestions will need to be set at the docker host level as docker is limited in what tuneables it can modify. 
 E.g. changes to the sysctl `vm.max_map_count`
@@ -73,9 +73,9 @@ For example:
 To provide your own configuration for Cassandra, via a user provided cassandra.yaml, cassandra-env.sh, jvm.properties, rack-dc.properties file etc.
 You can volume mount the configration directory or use some other configuration management capability (e.g. kubernetes configMaps)
 
-	```console
-	$ docker run --name some-cassandra -v /my/own/configdir:/etc/cassandra -d cassandra:tag
-	```
+```console
+$ docker run --name some-cassandra -v /my/own/configdir:/etc/cassandra -d cassandra:tag
+```
 
 Configuring Cassandra in this manner is not compatible with legacy configuration via `CASSANDRA_ENV_OVERRIDES`.
 

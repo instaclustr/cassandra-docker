@@ -18,7 +18,7 @@ Current status: __Beta__
 
 Starting a Cassandra instance is simple:
 
-    ```console
+	```console
     $ docker run --name some-cassandra -d cassandra:tag
     ```
 
@@ -47,7 +47,7 @@ Note that users on host systems with SELinux enabled may see issues with this. T
     ```console
     $ chcon -Rt svirt_sandbox_file_t /my/own/datadir
     ```
-    
+
 The Cassandra configuration directory (/etc/cassandra) can be managed by docker as a docker volume as appropriate for you environment if you are not using environment variable based configuration. 
 The Cassandra data directory however should generally be a bind mount to a directory on the host with an appropriately configured file system 
 (e.g. XFS with a readahead value of 8).

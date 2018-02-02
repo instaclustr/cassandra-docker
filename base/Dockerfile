@@ -12,8 +12,6 @@ RUN dagi 	python libpython-stdlib  python-minimal python-support python-pip \
 			curl \
 			libjemalloc1
 
-RUN echo "deb http://www.apache.org/dist/cassandra/debian 311x main" > /etc/apt/sources.list.d/cassandra.sources.list
-
 RUN curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
 
 RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key A278B781FE4B2BDA

@@ -1,6 +1,8 @@
 # vim:set ft=dockerfile:
 FROM instaclustr/cassandra-base
 
+RUN echo "deb http://www.apache.org/dist/cassandra/debian 311x main" > /etc/apt/sources.list.d/cassandra.sources.list
+
 RUN groupadd -r cassandra --gid=999 && useradd -r -g cassandra --uid=999 cassandra
 
 ENV CASSANDRA_VERSION 3.11.1

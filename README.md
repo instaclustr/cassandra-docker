@@ -15,6 +15,10 @@ Current status: __Beta__
 # How to use this image
 
 ## Start a `cassandra` server instance
+Prebuilt images can be fetched by running:
+```console
+docker pull instaclustr/cassandra
+```
 
 Starting a Cassandra instance is simple:
 

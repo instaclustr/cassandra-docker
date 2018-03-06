@@ -1,0 +1,14 @@
+graphite:
+  -
+    period: 30
+    timeunit: 'SECONDS'
+    prefix: 'cassandra-{{ip}}'
+    hosts:
+     - host: 'localhost'
+       port: 9109
+    predicate:
+      color: 'white'
+      useQualifiedName: true
+      patterns:
+           - "^org.apache.cassandra.+"
+           - '^jvm.+'

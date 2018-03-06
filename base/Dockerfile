@@ -1,16 +1,19 @@
-FROM debian:jessie
+FROM debian:stretch
 
 COPY dagi /usr/local/bin/
 
 RUN echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
 
 # common set of packages shared by all
-RUN dagi 	python libpython-stdlib  python-minimal python-support python-pip \
+RUN dagi 	python libpython-stdlib  python-minimal python-pip \
+            gnupg \
 			ntp \
 			ca-certificates \
 			netcat \
 			curl \
-			libjemalloc1
+			libjemalloc1 \
+			dirmngr \
+			procps
 
 RUN curl https://www.apache.org/dist/cassandra/KEYS | apt-key add -
 

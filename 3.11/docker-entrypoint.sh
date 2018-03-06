@@ -73,6 +73,11 @@ if [ "$1" = 'cassandra' ] && [ "$CASSANDRA_ENV_OVERRIDES" = 'true' ]; then
 			sed -ri 's/^('"$rackdc"'=).*/\1 '"$val"'/' "$CASSANDRA_CONFIG/cassandra-rackdc.properties"
 		fi
 	done
+
+	if [ "$ENABLE_LOCAL_GRAPHITE_METRICS" = 'true' ]; then
+		sed -i 's/{{ip}}/'"$(hostname --ip-address)"'/g' "$CASSANDRA_CONFIG/metrics-reporter-graphite.yaml"
+		echo "-Dcassandra.metricsReporterConfigFile=/etc/cassandra/metrics-reporter-graphite.yaml" >> /etc/cassandra/jvm.options
+	fi
 fi
 
 exec "$@"

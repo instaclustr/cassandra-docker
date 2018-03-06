@@ -1,0 +1,77 @@
+apiVersion: "apps/v1beta1"
+kind: StatefulSet
+metadata:
+  name: cassandra
+spec:
+  serviceName: cassandra
+  replicas: 3
+  selector:
+      matchLabels:
+        app: cassandra
+  template:
+    metadata:
+      labels:
+        app: cassandra
+    spec:
+      terminationGracePeriodSeconds: 1800
+      containers:
+      - name: cassandra
+        image: instaclustr/cassandra:3.11
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: ENABLE_LOCAL_GRAPHITE_METRICS
+            value: "true"
+          - name: CASSANDRA_ENV_OVERRIDES
+            value: "true"
+          - name: CASSANDRA_SEEDS
+            value: "cassandra-0.cassandra.cassandra.svc.cluster.local"
+        ports:
+        - containerPort: 7000
+          name: intra-node
+        - containerPort: 7001
+          name: tls-intra-node
+        - containerPort: 7199
+          name: jmx
+        - containerPort: 9042
+          name: cql
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+           cpu: "500m"
+           memory: 1Gi
+        readinessProbe:
+          exec:
+            command:
+            - cqlsh
+            - -e
+            - 'SELECT * FROM system.local;'
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+      - name: graphite-exporter
+        image: prom/graphite-exporter
+        command: ["/bin/graphite_exporter", "--graphite.mapping-config=/etc/config/mapping.conf"]
+#        image: k8s.gcr.io/busybox
+#        command: [ "/bin/sh", "-c", "ls /etc/config/" ]
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9108
+            name: graf-exporter
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 100Mi
+          requests:
+           cpu: "500m"
+           memory: 100Mi
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: graphite-mapping-conf
+            items:
+              - key: graphite-mapping.conf
+                path: mapping.conf

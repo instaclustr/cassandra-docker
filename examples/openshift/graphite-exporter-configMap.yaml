@@ -1,0 +1,135 @@
+apiVersion: v1
+data:
+  graphite-mapping.conf: |
+    *.org.apache.cassandra.metrics.ClientRequest.Latency.Write.*
+    name="Client Request Write Latency"
+    instance="$1"
+    metric_type15="$2"
+
+    *.org.apache.cassandra.metrics.ClientRequest.Latency.Read.*
+    name="Client Request Read Latency"
+    instance="$1"
+    metric_type15="$2"
+
+    *.org.apache.cassandra.metrics.Compaction.*
+    name="Compaction"
+    instance="$1"
+    compaction_type="$2"
+
+    *.org.apache.cassandra.metrics.Client.connectedNativeClients
+    name="Connected clients"
+    instance="$1"
+
+    *.org.apache.cassandra.metrics.ThreadPools.PendingTasks.request.ReadRepairStage
+    name="Read Repair pending tasks"
+    instance="$1"
+
+    *.org.apache.cassandra.metrics.ThreadPools.ActiveTasks.request.ReadRepairStage
+    name="Read Repair active tasks"
+    instance="$1"
+
+    *.org.apache.cassandra.metrics.DroppedMessage.Dropped.MUTATION.*
+    name="Dropped Mutation"
+    instance="$1"
+    metric_type5="$2"
+
+    *.org.apache.cassandra.metrics.DroppedMessage.Dropped.READ.*
+    name="Dropped Read"
+    instance="$1"
+    metric_type5="$2"
+
+    *.jvm.gc.ConcurrentMarkSweep.*
+    name="GC CMS"
+    instance="$1"
+    metric_type_2="$2"
+
+    *.jvm.gc.ParNew.*
+    name="GC ParNew"
+    instance="$1"
+    metric_type_2="$2"
+
+    *.org.apache.cassandra.metrics.Table.ReadLatency.*.*.*
+    name="Read Latency"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+    metric_type15="$4"
+
+    *.org.apache.cassandra.metrics.Table.WriteLatency.*.*.*
+    name="Write Latency"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+    metric_type15="$4"
+
+    *.org.apache.cassandra.metrics.Table.MaxPartitionSize.*.*
+    name="Max Partition Size"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.Table.MeanPartitionSize.*.*
+    name="Mean Partition Size"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.Table.LiveScannedHistogram.*.*.*
+    name="Live Cell"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+    metric_type11="$4"
+
+    *.org.apache.cassandra.metrics.Table.TombstoneScannedHistogram.*.*.*
+    name="Tombstones"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+    metric_type11="$4"
+
+    *.org.apache.cassandra.metrics.Table.SSTablesPerReadHistogram.*.*.*
+    name="SSTables"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+    metric_type11="$4"
+
+    *.org.apache.cassandra.metrics.Table.TotalDiskSpaceUsed.*.*.count
+    name="Total Disk Space Used"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.Table.LiveDiskSpaceUsed.*.*.count
+    name="Live Disk Space Used"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.Table.MeanPartitionSize.*.*
+    name="Mean Partition Size"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.Table.MaxPartitionSize.*.*
+    name="Max Partition Size"
+    instance="$1"
+    keyspace="$2"
+    table="$3"
+
+    *.org.apache.cassandra.metrics.keyspace.WriteLatency.*.count
+    name="Keyspace Writes"
+    instance="$1"
+    keyspace="$2"
+
+    *.org.apache.cassandra.metrics.keyspace.ReadLatency.*.count
+    name="Keyspace Reads"
+    instance="$1"
+    keyspace="$2"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: graphite-mapping-conf
+  namespace: cassandra

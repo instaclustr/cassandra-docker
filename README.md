@@ -86,3 +86,7 @@ Configuring Cassandra in this manner is not compatible with legacy configuration
 	
 ## Legacy configuration
 This docker images supports configuration via environment variables as well similar to the docker-library image see [legacy documentation](LEGACY.md)
+
+## Elassandra 
+Instaclustr cassandra docker images currently support Elassandra via https://github.com/zegelin/cassandra-docker. Elassandra images can be pulled from docker hub via `docker pull instaclustr/cassandra:elassandra-5.5.0.13`
+Examples can be found in the example directory. Elassandra does not support environment variable configuration.

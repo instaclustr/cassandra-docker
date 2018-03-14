@@ -1,0 +1,87 @@
+apiVersion: "apps/v1beta1"
+kind: StatefulSet
+metadata:
+  name: elassandra
+spec:
+  serviceName: elassandra
+  replicas: 3
+  selector:
+      matchLabels:
+        app: elassandra
+  template:
+    metadata:
+      labels:
+        app: elassandra
+    spec:
+      terminationGracePeriodSeconds: 1800
+      containers:
+      - name: elassandra
+        image: elassandra:5.5.0.13
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 7000
+          name: intra-node
+        - containerPort: 7001
+          name: tls-intra-node
+        - containerPort: 7199
+          name: jmx
+        - containerPort: 9042
+          name: cql
+        - containerPort: 9200
+          name: es-http
+        - containerPort: 9300
+          name: es-transport
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 1Gi
+          requests:
+           cpu: "500m"
+           memory: 1Gi
+        readinessProbe:
+          exec:
+            command:
+            - readiness-probe
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+        volumeMounts:
+          - name: elassandra-config-volume
+            mountPath: /etc/cassandra
+          - name: elassandra-data
+            mountPath: /var/lib/cassandra
+      - name: graphite-exporter
+        image: prom/graphite-exporter
+        command: ["/bin/graphite_exporter", "--graphite.mapping-config=/etc/config/mapping.conf"]
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 9108
+            name: graf-exporter
+        resources:
+          limits:
+            cpu: "500m"
+            memory: 100Mi
+          requests:
+           cpu: "500m"
+           memory: 100Mi
+        volumeMounts:
+          - name: config-volume
+            mountPath: /etc/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: graphite-mapping-conf
+            items:
+              - key: graphite-mapping.conf
+                path: mapping.conf
+        - name: elassandra-config-volume
+          configMap:
+            name: elassandra-config
+
+  volumeClaimTemplates:
+  - metadata:
+      name: elassandra-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

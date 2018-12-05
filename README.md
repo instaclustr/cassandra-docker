@@ -90,3 +90,5 @@ This docker images supports configuration via environment variables as well simi
 ## Elassandra 
 Instaclustr cassandra docker images currently support Elassandra via https://github.com/zegelin/cassandra-docker. Elassandra images can be pulled from docker hub via `docker pull instaclustr/cassandra:elassandra-5.5.0.13`
 Examples can be found in the example directory. Elassandra does not support environment variable configuration.
+
+Please see https://www.instaclustr.com/support/documentation/announcements/instaclustr-open-source-project-status/ for Instaclustr support status of this project.

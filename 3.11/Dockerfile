@@ -6,7 +6,7 @@ RUN echo "deb http://www.apache.org/dist/cassandra/debian 311x main" > /etc/apt/
 #Add cassandra user to root group
 RUN useradd -r -g 0 --uid=999 cassandra
 
-ENV CASSANDRA_VERSION 3.11.2
+ENV CASSANDRA_VERSION 3.11.4
 
 ENV CASSANDRA_CONFIG /etc/cassandra
 

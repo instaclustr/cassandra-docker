@@ -1,8 +1,8 @@
 FROM debian:stretch
 
-COPY dagi /usr/local/bin/
+ARG openjre_version=8u181-b13-2~deb9u1
 
-RUN echo "deb http://http.debian.net/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+COPY dagi /usr/local/bin/
 
 # common set of packages shared by all
 RUN dagi 	python libpython-stdlib  python-minimal python-pip \
@@ -21,13 +21,8 @@ RUN apt-key adv --keyserver pool.sks-keyservers.net --recv-key A278B781FE4B2BDA
 
 ENV PATH /opt/bin:$PATH
 
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys EEA14886 \
-    && echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list.d/webupd8team-java.list \
-    && echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >> /etc/apt/sources.list.d/webupd8team-java.list \
-    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-
-RUN dagi oracle-java8-installer \
-    && rm -r /var/cache/oracle-jdk8-installer
+RUN dagi locales gnupg2 dirmngr curl \
+    openjdk-8-jre-headless=${openjre_version} libjna-java libjna-jni procps
 
 COPY local_policy.jar US_export_policy.jar /usr/lib/jvm/java-8-oracle/jre/lib/security/
 
